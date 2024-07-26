@@ -90,13 +90,13 @@ UserApp.post('/login', expressAsyncHandler(async (req, res) => {
         // create JWT token with 20 seconds expiration
         let signedToken = jwt.sign({ username: userCred.username }, process.env.SECRET_KEY , { expiresIn: '24h' });
         // send response
-        res.send({ message: "Login Successful", payload: { username: userCred.username, token: signedToken } });
+        res.send({ message: "Login Successful", payload: { user: dbuser, token: signedToken } });
       }
     }
   } catch (error) {
     console.error("Error during login:", error);
-    res.status(500).send({ message: "Error during login", error });
-  }
+    res.status(500).send({ message: "Error during login", error });
+  }
 }));
 
 // UserApp.put('/users/:id', tokenVerify, expressAsyncHandler(async (req, res) => {
