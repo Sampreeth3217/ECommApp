@@ -1,31 +1,93 @@
+// import { userLoginContext } from "./userLoginContext";
+// import { useState } from "react";
+// import { useNavigate } from "react-router-dom";  
+
+// function UserLoginStore({ children }) {
+//   //login user state
+//   let [currentUser, setCurrentUser] = useState(null);
+//   let [userLoginStatus, setUserLoginStatus] = useState(false);
+//   let [err, setErr] = useState("");
+
+//   //user login
+//   async function loginUser(userCred) {
+//     try {
+//       let res = await fetch(
+//         `http://localhost:3000/user-api/login`,
+      
+//       {
+//         method: "POST",
+//         headers:{"Content-type":"application/json",},
+//         body:JSON.stringify(userCred),
+//       });
+//       let result=await  res.json();
+//       if(result.message==='login success')
+//       {
+//         setCurrentUser(result.user)
+//         setUserLoginStatus(true)
+//         setErr('')
+//       }
+//       else{
+//         setErr(result.message);
+//         setCurrentUser({})
+//         setUserLoginStatus(false)
+//       }
+//     }
+//     catch(error){
+//       setErr(error.message);
+//     }
+//   }
+
+//   //user logout
+//   function logoutUser() {
+//     //reset state
+//     setCurrentUser({});
+//     setUserLoginStatus(false);
+//     setErr('')
+//   }
+
+//   return (
+//     <userLoginContext.Provider
+//       value={{ loginUser, logoutUser, userLoginStatus,err,currentUser,setCurrentUser }}
+//     >
+//       {children}
+//     </userLoginContext.Provider>
+//   );
+// }
+
+// export default UserLoginStore;
+
+
+
 import { userLoginContext } from "./userLoginContext";
 import { useState } from "react";
 
 function UserLoginStore({ children }) {
   //login user state
-  let [currentUser, setCurrentUser] = useState(null);
-  let [userLoginStatus, setUserLoginStatus] = useState(false);
-  let [err, setErr] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);
+  const [userLoginStatus, setUserLoginStatus] = useState(false);
+  const [err, setErr] = useState("");
 
   //user login
   async function loginUser(userCred) {
     try {
-      let res = await fetch(
-        `http://localhost:3000/users?username=${userCred.username}&password=${userCred.password}`
+      const res = await fetch(
+        `http://localhost:3000/user-api/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(userCred),
+        }
       );
-      let usersList = await res.json();
-      console.log("users list", usersList);
-      if (usersList.length === 0) {
-        //invalid credentials
-        console.log("invalid user");
+
+      const result = await res.json();
+      if (result.message === 'login success') {
+        setCurrentUser(result.user);
+        setUserLoginStatus(true);
+        setErr('');
+      } else {
+        setErr(result.message);
         setCurrentUser(null);
         setUserLoginStatus(false);
-        setErr('Invalid Username or Password')
-       
-      } else {
-        setCurrentUser(usersList[0]);
-        setUserLoginStatus(true);
-        setErr('')
       }
     } catch (error) {
       setErr(error.message);
@@ -35,14 +97,14 @@ function UserLoginStore({ children }) {
   //user logout
   function logoutUser() {
     //reset state
-    setCurrentUser({});
+    setCurrentUser(null);
     setUserLoginStatus(false);
-    setErr('')
+    setErr('');
   }
 
   return (
     <userLoginContext.Provider
-      value={{ loginUser, logoutUser, userLoginStatus,err,currentUser,setCurrentUser }}
+      value={{ loginUser, logoutUser, userLoginStatus, err, currentUser, setCurrentUser }}
     >
       {children}
     </userLoginContext.Provider>
