@@ -68,19 +68,43 @@ function UserLoginStore({ children }) {
   const [err, setErr] = useState("");
 
   //user login
-  async function loginUser(userCred) {
-    try {
-      const res = await fetch(
-        `http://localhost:3000/user-api/login`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(userCred),
-        }
-      );
+  // async function loginUser(userCred) {
+  //   try {
+  //     const res = await fetch(
+  //       `http://localhost:3000/user-api/login`,
+  //       {
+  //         method: "POST",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify(userCred),
+  //       }
+  //     );
 
+  //     const result = await res.json();
+  //     if (result.message === 'login success') {
+  //       setCurrentUser(result.user);
+  //       setUserLoginStatus(true);
+  //       setErr('');
+  //     } else {
+  //       setErr(result.message);
+  //       setCurrentUser(null);
+  //       setUserLoginStatus(false);
+  //     }
+  //   } catch (error) {
+  //     setErr(error.message);
+  //   }
+  // }
+
+
+  const loginUser = async (userCred) => {
+    try {
+      const res = await fetch('http://localhost:3000/user-api/login', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userCred),
+      });
       const result = await res.json();
-      if (result.message === 'login success') {
+      console.log('Login response:', result); // Add this line
+      if (result.message === 'Login Successful') {
         setCurrentUser(result.user);
         setUserLoginStatus(true);
         setErr('');
@@ -92,7 +116,8 @@ function UserLoginStore({ children }) {
     } catch (error) {
       setErr(error.message);
     }
-  }
+  };
+  
 
   //user logout
   function logoutUser() {
