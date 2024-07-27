@@ -26,11 +26,12 @@ function Product(props) {
   return (
     <div className='card text-center h-100 bg-light'>
     <div className="card-body d-flex flex-column justify-content-between">
-      <p className="fs-4 text-secondary">{productObj.title}</p>
-      <p className="fs-6 text-danger">{productObj.brand}</p>
-      <p className="lead">{productObj.description}</p>
-      <p className="fs-3 text-warning">${productObj.price}</p>
-      <button className="btn btn-success" onClick={()=>addProductToCart(productObj)}>Add to cart</button>
+    <img src={productObj.thumbnail} alt="" />
+    <p className="fs-4 text-secondary">{productObj.title}</p>
+    <p className="fs-6 text-danger">{productObj.brand}</p>
+    <p className="lead">{productObj.description}</p>
+    <p className="fs-3 text-warning">${productObj.price}</p>
+    <button className="btn btn-success" onClick={()=>addProductToCart(productObj)}>Add to cart</button>
     </div>
 
     </div>

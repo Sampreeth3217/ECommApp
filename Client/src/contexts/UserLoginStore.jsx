@@ -48,6 +48,7 @@ function UserLoginStore({ children }) {
         setCurrentUser(result.payload.user);
         setUserLoginStatus(true);
         setErr('');
+        sessionStorage.setItem('token',result.payload.token)
       } else {
         setErr(result.message);
         setCurrentUser(null);

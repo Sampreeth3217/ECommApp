@@ -6,8 +6,11 @@ import { GiArchiveRegister } from "react-icons/gi";
 import { BiSolidLogInCircle } from "react-icons/bi";
 import { IoPeopleSharp } from "react-icons/io5";
 import { FaShoppingBag } from "react-icons/fa";
+import { userLoginContext } from "../../contexts/userLoginContext";
+import { useContext } from "react";
 
 const Header = () => {
+  let { logoutUser, userLoginStatus } = useContext(userLoginContext);
   return (
     <div className='d-flex justify-content-around header'>
       <h1 className="d-flex align-items-center text-warning">
@@ -24,11 +27,21 @@ const Header = () => {
             <GiArchiveRegister className='fs-3 text-warning me-2'/>Register
           </Link>
         </li>
-        <li className='nav-item'>
-          <Link to="login" className="nav-link text-white d-flex align-items-center">
-            <BiSolidLogInCircle className='fs-3 text-warning me-2'/>Login
-          </Link>
-        </li>
+        {userLoginStatus === false ? (
+          <li className="nav-item">
+            <Link to="login" className="nav-link text-white">
+              <BiSolidLogInCircle className="fs-3 text-warning me-2 " />
+              Login
+            </Link>
+          </li>
+        ) : (
+          <li className="nav-item">
+            <Link to="login" className="nav-link text-white" onClick={logoutUser}>
+              <BiSolidLogInCircle className="fs-3 text-warning me-2 " />
+              Logout
+            </Link>
+          </li>
+        )}
         <li className='nav-item'>
           <Link to="about" className="nav-link text-white d-flex align-items-center">
             <IoPeopleSharp className='fs-3 text-warning me-2'/>About Us
