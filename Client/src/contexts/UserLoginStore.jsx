@@ -66,6 +66,7 @@ function UserLoginStore({ children }) {
     setCurrentUser(null);
     setUserLoginStatus(false);
     setErr('');
+    sessionStorage.clear();
   }
 
   return (

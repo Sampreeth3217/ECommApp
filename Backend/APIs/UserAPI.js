@@ -73,6 +73,8 @@ UserApp.post('/users', expressAsyncHandler(async (req, res) => {
   }
 }));
 
+
+
 UserApp.post('/login', expressAsyncHandler(async (req, res) => {
   try {
     const usersCollection = req.app.get('usersCollection');
@@ -122,6 +124,46 @@ UserApp.delete('/users/:id', tokenVerify,expressAsyncHandler( async (req, res) =
 
 
 
+UserApp.delete('/user-api/user-cart/:id', tokenVerify, expressAsyncHandler(async (req, res) => {
+  try {
+    const usersCollection = req.app.get('usersCollection');
+    const username = req.body.username; // Add username to identify the user's cart
+    const productId = Number(req.params.id);
+
+    // Update user's cart to remove the item with the specified ID
+    const result = await usersCollection.updateOne(
+      { username: username },
+      { $pull: { products: { id: productId } } }
+    );
+
+    if (result.modifiedCount === 0) {
+      return res.status(404).send({ message: "Cart item not found or already deleted" });
+    }
+
+    res.send({ message: "Cart item deleted successfully" });
+  } catch (error) {
+    res.status(500).send({ message: "Error deleting cart item", error });
+  }
+}));
+
+UserApp.put("/user",//tokenVerify,
+  expressAsyncHandler(async (req, res) => {
+    //get usersCollection obj
+    const usersCollection = req.app.get("usersCollection");
+    //get modified user from client
+    let modifiedUser = req.body;
+    //modify by username
+    let  updatedUser=await usersCollection.updateOne(
+      { username: modifiedUser.username },
+      { $set: { ...modifiedUser } },
+      // { returnNewDocument:true }
+    );
+    res.send({ message: "User modified" ,payload:updatedUser});
+  })
+);
+
+
+
 UserApp.put('/add-to-cart/:username',expressAsyncHandler(
   async (req, res) => {
     let usersCollection=req.app.get('usersCollection');
@@ -138,3 +180,19 @@ UserApp.put('/add-to-cart/:username',expressAsyncHandler(
   }
 ))
 module.exports = UserApp;
+
+
+
+//get latest cart
+
+UserApp.get( '/cart/:username',expressAsyncHandler(async (req, res) => {
+  //getusersCollection object
+  const usersCollection=req.app.get("usersCollection");
+  //get username
+  let usernameFromUrl=req.params.username;
+  //get cart
+  let cart=await usersCollection.findOne({username:usernameFromUrl})
+  //send res
+  res.send({message:"cart",payload:cart});
+
+}))
